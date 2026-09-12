@@ -25,7 +25,7 @@ Turkish data-protection law.
 
 ## What it does
 
-**1. Knowledge Assistant (RAG)** — *built*
+**1. Knowledge Assistant (RAG)**
 Ask in natural language; the assistant retrieves the relevant passages and answers
 with source cards you can open and verify. Grounded and deterministic (temperature 0,
 fixed seed) — it cites documents and never fabricates. If the documents don't cover
@@ -34,22 +34,18 @@ results of those tests?" resolves against the earlier question) via an asymmetri
 memory window plus a rolling summary for long chats. Threads persist locally and
 reopen from the sidebar.
 
-**2. Compliance Checker** — *built*
+**2. Compliance Checker**
 Check a document — built-in or uploaded — against a rule set authored per document
 type. Returns a structured report: compliant parts, violations, missing items,
 suggested fixes and a severity-weighted score. Structure and traceability rules are
 deterministic; content-quality rules use a local model as a judge. Rules are editable
 from the UI in plain language.
 
-**3. Process guidance** — *built*
+**3. Process guidance**
 The project lifecycle as a ladder of phases — deliverables, entry/exit criteria and
 gates — **extracted from the loaded documents, not hand-authored**. Every claim is
 citation-checked against the source text or dropped. A role lens highlights the items
 that concern the viewer.
-
-**4. Agentic quality layer** — *not started*
-Watch a platform (Redmine / Teams / Slack), retrieve the relevant rule, check
-compliance, notify with a citation — reusing the same grounded engine, still local.
 
 ---
 
@@ -302,7 +298,6 @@ extracted from the documents with citation checking.
 - Filling the lifecycle phases the source deck names but never details
 - An audit log — who asked what, which documents were used
 - Metadata filtering in search (department / document type)
-- The agentic layer: watch a platform → retrieve rule → check → notify with citation
 
 ---
 

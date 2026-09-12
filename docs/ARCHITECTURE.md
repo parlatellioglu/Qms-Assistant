@@ -15,17 +15,14 @@ Companion documents:
 
 A **local, private, Turkish-language AI system over an organisation's
 quality-management documents** (CMMI / SDLC procedures, specifications, test plans).
-Not just a chatbot — four product pillars:
+Not just a chatbot — three product pillars:
 
 1. **Knowledge Assistant (RAG)** — answers questions using *only* the loaded
    documents, with source citations and an honest "I don't have this" fallback.
-   **Built.**
 2. **Compliance Checker** — checks a document against an authored rule set and
-   returns a structured report (compliant / violation / missing / score). **Built.**
+   returns a structured report (compliant / violation / missing / score).
 3. **Process guidance** — the project lifecycle as a ladder of phases, *extracted
-   from the documents rather than hand-authored*, with a role lens. **Built.**
-4. **Agentic quality layer** — watch a platform (Redmine / Teams / Slack), retrieve
-   the relevant rule, check compliance, notify with a citation. **Not started.**
+   from the documents rather than hand-authored*, with a role lens.
 
 **Hard constraints that shape every decision:**
 
