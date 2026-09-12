@@ -1,0 +1,7 @@
+venv
+.venv
+__pycache__
+qdrant_storage
+*.pyc
+.git
+.gitignore

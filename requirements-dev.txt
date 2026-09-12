@@ -1,0 +1,21 @@
+# Dev / test / tooling dependencies — installed into the project venv (.venv),
+# NOT the backend Docker image. Install from the repo root:
+#     .venv/bin/pip install -r requirements-dev.txt
+#
+# Includes the backend runtime so the tests/scripts can import the embedding
+# service (tests/conftest.py and scripts/query/* construct EmbeddingService).
+-r backend/requirements.txt
+
+# The backend image installs CPU-only torch via the Dockerfile; the venv needs it
+# explicitly (FlagEmbedding requires torch at runtime).
+torch
+
+# Test suite (tests/)
+pytest
+requests
+
+# Document-generation / extraction scripts (scripts/populate/)
+python-docx
+openpyxl
+python-pptx
+fpdf2

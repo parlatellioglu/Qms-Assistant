@@ -1,0 +1,85 @@
+/* ============================================================
+   QMS Assistant — Color tokens
+   Primary blue #0360a9
+   ============================================================ */
+
+:root {
+  /* ---- Brand scale (blue) ---- */
+  --blue-50:  #eaf3fb;
+  --blue-100: #cfe2f4;
+  --blue-200: #a4c8e9;
+  --blue-300: #6ba6da;
+  --blue-400: #2f80c6;
+  --blue-500: #0360a9;   /* PRIMARY */
+  --blue-600: #034f8c;
+  --blue-700: #033f70;
+  --blue-800: #042f53;
+  --blue-900: #04223c;
+
+  /* Brighter accent blue (mark / highlights) */
+  --blue-mark: #0a78c2;
+
+  /* ---- Neutral / slate scale ---- */
+  --gray-0:   #ffffff;
+  --gray-50:  #f7f8fa;
+  --gray-100: #eef0f3;
+  --gray-200: #e1e4e9;
+  --gray-300: #cbd0d8;
+  --gray-400: #a6acb6;
+  --gray-500: #7c828d;
+  --gray-600: #5b616b;
+  --gray-700: #3f444d;
+  --gray-800: #282c33;
+  --gray-900: #15181c;
+
+  /* ---- Semantic status ---- */
+  --green-50:  #e9f6ee;
+  --green-500: #1c8a4d;
+  --green-600: #156d3d;
+
+  --amber-50:  #fdf4e3;
+  --amber-500: #c98a12;
+  --amber-600: #a06f0c;
+
+  --red-50:   #fcebec;
+  --red-500:  #c8333a;
+  --red-600:  #a3262d;
+
+  /* ============================================================
+     Semantic aliases — reference these in components
+     ============================================================ */
+
+  /* Surfaces */
+  --surface-page:    var(--gray-50);
+  --surface-card:    var(--gray-0);
+  --surface-sunken:  var(--gray-100);
+  --surface-inverse: var(--blue-900);
+  --surface-brand:   var(--blue-500);
+
+  /* Text */
+  --text-strong:  var(--gray-900);
+  --text-body:    var(--gray-700);
+  --text-muted:   var(--gray-500);
+  --text-faint:   var(--gray-400);
+  --text-onbrand: var(--gray-0);
+  --text-link:    var(--blue-500);
+
+  /* Borders / dividers */
+  --border-subtle: var(--gray-200);
+  --border-default: var(--gray-300);
+  --border-strong: var(--gray-400);
+  --border-brand:  var(--blue-500);
+  --ring-focus:    var(--blue-400);
+
+  /* Chat-specific */
+  --bubble-user-bg:   var(--blue-500);
+  --bubble-user-text: var(--gray-0);
+  --bubble-bot-bg:    var(--gray-0);
+  --bubble-bot-text:  var(--gray-800);
+  --bubble-bot-border: var(--gray-200);
+
+  /* Source-card relevance score accents */
+  --score-high: var(--green-500);
+  --score-mid:  var(--amber-500);
+  --score-low:  var(--gray-400);
+}

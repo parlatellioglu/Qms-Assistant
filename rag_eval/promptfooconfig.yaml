@@ -1,0 +1,277 @@
+# promptfoo — compare two local models THROUGH the RAG assistant.
+#
+# The /chat endpoint fixes the model server-side (LLM_MODEL), so the backend runs
+# TWICE — one instance per model, on two ports — with one HTTP provider pointed at
+# each. Retrieval is identical (same Qdrant collection); only the answering model
+# differs. See README.md in this folder for the step-by-step.
+#
+# ---------------------------------------------------------------------------
+# WHY THIS FILE LOOKS THE WAY IT DOES
+#
+# The first version of this eval graded every answer with a single rubric asking
+# whether it was "grounded in CMMI/SDLC quality documents" — while passing the
+# grader ONLY the answer text. The grader could not see the retrieved documents,
+# so it had no way to verify grounding, and failed correct answers reasoning
+# "since no such source documents were provided as context". Five of twenty
+# questions failed that way. See docs/EVALUATION.md.
+#
+# The fix, applied here:
+#   1. Grade against the ANSWER KEY (docs/ANSWER-KEY.md), not against an
+#      unverifiable notion of groundedness. Where the expected answer contains a
+#      specific value, assert it deterministically — a string match cannot
+#      hallucinate. Where the answer is open-ended, the rubric is given the
+#      reference answer to compare against.
+#   2. Keep the shared rubric to properties that ARE checkable from the output
+#      alone: language, and not inventing specifics.
+#   3. Expose the response metadata, so each row records which model answered and
+#      whether the backend considered the answer grounded.
+# ---------------------------------------------------------------------------
+
+description: "RAG assistant: model comparison against the answer key"
+
+providers:
+  # Change the labels to match whatever LLM_MODEL each instance was started with.
+  - id: "http://localhost:8013/chat"
+    label: "model-a (RAG)"
+    config: &chat_provider
+      method: POST
+      headers:
+        Content-Type: application/json
+      body:
+        query: "{{question}}"
+        history: null
+        summary: ""
+      # `output` stays the answer alone, so string assertions below match the
+      # answer and not the retrieved source text. `metadata` records the model,
+      # the grounded flag and the source ids for inspection in `promptfoo view`.
+      transformResponse: "({ output: json.answer, metadata: json.meta })"
+
+  - id: "http://localhost:8014/chat"
+    label: "model-b (RAG)"
+    config: *chat_provider
+
+# Applies to every question. Deliberately limited to what a grader CAN verify
+# with only the answer in front of it.
+defaultTest:
+  assert:
+    - type: llm-rubric
+      value: >
+        The answer is written in the same language as the question (Turkish
+        question -> Turkish answer, English question -> English answer), is
+        professional in tone, and does not contradict itself. It must not present
+        invented specifics — IP addresses, passwords, URLs, or repository
+        addresses — as if they came from a document.
+      provider: ollama:chat:gemma4:e4b
+
+tests:
+  # --- Pinpoint retrieval -------------------------------------------------- #
+  - vars:
+      question: "Bir SRS'te güvenlik gereksinimleri en az hangi başlıkları (kimlik doğrulama, yetkilendirme, şifreleme, denetim kaydı) kapsamalıdır?"
+    assert:
+      - { type: icontains, value: "AES-256" }
+      - { type: icontains, value: "TLS" }
+      - type: llm-rubric
+        value: >
+          The answer covers authentication/authorisation (OAuth2/JWT, role-based),
+          encryption at rest and in transit, payment-data tokenisation or PCI-DSS,
+          and an audit log for financial transactions.
+
+  - vars:
+      question: "What exit criteria must be met before the SAT acceptance certificate is issued?"
+    assert:
+      - { type: icontains, value: "95" }
+      - type: llm-rubric
+        value: >
+          The answer states that critical/high-severity defects must be closed and
+          that at least ~95% of test cases must pass before the SAT acceptance
+          certificate is issued.
+
+  - vars:
+      question: "TRF hangi iki rol tarafından imzalanır ve hangi aşamada temellenir (baseline)?"
+    assert:
+      - { type: icontains, value: "Mimar" }
+      - type: llm-rubric
+        value: >
+          The answer names the sign-off roles on the TRF (Prepared - Project
+          Manager, Recommended - Software Architect, Approved - Deputy General
+          Manager) and says the document is baselined at version 1.0 when approved
+          and published. Naming three roles rather than two is correct: the
+          question's premise of "two roles" is wrong and the document governs.
+
+  - vars:
+      question: "Which record demonstrates bi-directional traceability between requirements and test cases?"
+    assert:
+      - { type: icontains, value: "atris" }   # Matris / Matrix, case- and prefix-safe
+      - type: llm-rubric
+        value: >
+          The answer names the Traceability Matrix as the specific artifact,
+          rather than describing traceability in general terms.
+
+  # --- Broad & conceptual synthesis ---------------------------------------- #
+  - vars:
+      question: "CMMI tabanlı kalite süreci projelerde neyi amaçlar ve hangi ana aşamalardan oluşur?"
+    assert:
+      - { type: icontains, value: "Ideation" }
+      - { type: icontains, value: "Launch" }
+      - type: llm-rubric
+        value: >
+          The answer explains the purpose (consistent, traceable, auditable
+          delivery per the CMMI/SDLC procedure) and lists the lifecycle phases in
+          order, from Ideation/Scoping through Development and Testing to Launch.
+
+  - vars:
+      question: "Give an overview of the full set of documents produced across a project's life cycle."
+    assert:
+      - type: llm-rubric
+        value: >
+          The answer names most of this document set and ties them to lifecycle
+          phases: BUR, TRF, Tech Reco, SRS, PMP, DSAD, SAT/UAT Plans, SAT/UAT
+          Cases, SAT/UAT Certificates, Close-out Report. It gives a corpus-wide
+          overview rather than dwelling on one document's detail.
+
+  - vars:
+      question: "Which quality-assurance (SQA) checkpoints occur throughout the process?"
+    assert:
+      - type: llm-rubric
+        value: >
+          The answer lists checkpoints such as peer and gate reviews (G1-G6),
+          sign-off/approval on each deliverable, baselining of signed deliverables,
+          milestone/phase-gate reviews, defect logging with severity, and
+          traceability checks. It stays broad rather than diving into one document.
+
+  # --- Comparison & cross-document ----------------------------------------- #
+  - vars:
+      question: "SAT ile UAT arasındaki fark nedir; her biri neyi doğrular?"
+    assert:
+      - { type: icontains, value: "UAT" }
+      - type: llm-rubric
+        value: >
+          The answer contrasts both: SAT verifies the system technically
+          (system/integration against technical requirements); UAT verifies it from
+          the business unit and end-user perspective against functional
+          requirements. Both are addressed, not just one.
+
+  - vars:
+      question: "How do the BUR, TRF, SRS and DSAD documents feed into one another?"
+    assert:
+      - { type: icontains, value: "DSAD" }
+      - type: llm-rubric
+        value: >
+          The answer links all four in order as a chain - BUR (business unit
+          requirements) into TRF (technical requirements form) into SRS (software
+          requirements) into DSAD (detailed system and architecture design) - with
+          each an input to the next.
+
+  - vars:
+      question: "Compare the Prepared / Recommended / Approved sign-off roles across the PMP and the SRS."
+    assert:
+      - { type: icontains, value: "Analis" }   # İş Analisti — SRS "Prepared" role
+      - type: llm-rubric
+        value: >
+          The answer contrasts the two sign-off blocks: the PMP is prepared by the
+          Project Manager and approved by the Deputy General Manager, while the SRS
+          is prepared by the Business Analyst and approved by the Project Manager;
+          the Software Architect recommends both. It notes the structure is
+          identical while the roles differ.
+
+  # --- Procedural & next-step ---------------------------------------------- #
+  - vars:
+      question: "SRS'i yazıp onaylattım; süreçte sıradaki adım ve hangi doküman nedir?"
+    assert:
+      - { type: icontains, value: "DSAD" }
+      - type: llm-rubric
+        value: >
+          The answer says the next phase after Requirements Development is Design,
+          and the document to produce is the DSAD.
+
+  - vars:
+      question: "I've completed the detailed design (DSAD) — what must happen before development begins?"
+    assert:
+      - type: llm-rubric
+        value: >
+          The answer states the DSAD must be reviewed, signed off and baselined -
+          the design-phase exit / development entry criteria - before Development
+          starts. It gives phase-gate conditions, not a static definition of DSAD.
+
+  - vars:
+      question: "Sistem kabul testi (SAT) başarıyla geçti; UAT'ye geçmek için ne yapmalıyım?"
+    assert:
+      - { type: icontains, value: "UAT" }
+      - type: llm-rubric
+        value: >
+          The answer says the SAT exit criteria must be met and the SAT certificate
+          issued, then UAT is run with the business unit and end users, concluding
+          with the UAT certificate.
+
+  # --- Structured data (xlsx / pptx) --------------------------------------- #
+  - vars:
+      question: "SAT test senaryolarına göre, bir hesabın kilitlenmesi için kaç ardışık hatalı OTP denemesi gerekir?"
+    assert:
+      # The exact value is 3. Match the digit or the Turkish word next to a
+      # lockout/attempt term, so an unrelated "3" elsewhere cannot pass this.
+      - type: javascript
+        value: "/(\\b3\\b|üç)[^.\\n]{0,40}(ardışık|hatalı|deneme|giriş)|(ardışık|hatalı|deneme)[^.\\n]{0,40}(\\b3\\b|üç)/i.test(output)"
+      - type: llm-rubric
+        value: >
+          The answer states that the account is locked after three consecutive
+          failed OTP attempts.
+
+  - vars:
+      question: "According to the SAT test cases, what response-time target and sustained TPS capacity do the performance/load tests verify?"
+    assert:
+      - { type: icontains, value: "500" }
+      - type: javascript
+        value: "/2\\s*(s|sn|saniye|second)/i.test(output)"
+      - type: llm-rubric
+        value: >
+          The answer gives both numbers from the test cases: a response-time target
+          of 2 seconds or less, and 500 TPS sustained capacity.
+
+  - vars:
+      question: "SAT senaryolarında KVKK açısından test ortamında üretim verisi nasıl kullanılmalıdır?"
+    assert:
+      - { type: icontains, value: "maske" }
+      - type: llm-rubric
+        value: >
+          The answer states that production data may not be used unmasked - all
+          personal data must be masked in the test environment (masked production
+          data plus synthetic test subscribers).
+
+  - vars:
+      question: "In the SDLC process slides, what are the high-level life-cycle phases from ideation to launch?"
+    assert:
+      - { type: icontains, value: "IDEATION" }
+      - { type: icontains, value: "LAUNCH" }
+      - type: llm-rubric
+        value: >
+          The answer lists the high-level phases in order from Ideation through
+          Scoping, Build Case, Development and Testing & Validation to Launch.
+
+  # --- Out-of-scope: the honest fallback must fire -------------------------- #
+  # These three answers are NOT in the corpus. The correct behaviour is the
+  # fallback notice and no invented specifics.
+  - vars:
+      question: "Bu projedeki mobil uygulamanın kod deposunun (repository) Git adresi nedir?"
+    assert:
+      - { type: icontains, value: "bulamadığım" }   # the fallback notice
+      - type: javascript
+        value: "!/(github\\.com|gitlab\\.com|bitbucket|git@|https?:\\/\\/[^\\s]*\\.git)/i.test(output)"
+
+  - vars:
+      question: "What is the production server IP address and database password for the deployment?"
+    assert:
+      # English question -> English answer -> the English fallback notice.
+      - { type: icontains, value: "could not find enough relevant information" }
+      # Must not invent an IP address or a credential.
+      - type: javascript
+        value: "!/\\b\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\b/.test(output)"
+
+  - vars:
+      question: "Ekip üyelerinin maaş bilgileri hangi belgede yer alıyor?"
+    assert:
+      - { type: icontains, value: "bulamadığım" }
+      - type: llm-rubric
+        value: >
+          The answer says salary information does not appear in the documents. It
+          must NOT point the user at some other document as if it contained salary
+          data.

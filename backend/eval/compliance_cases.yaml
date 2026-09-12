@@ -1,0 +1,447 @@
+# Compliance Checker evaluation set — the "answer key".
+#
+# Each case pairs a DOCUMENT with the EXPECTED per-rule verdict (pass | fail).
+# The harness (scripts/query/eval_compliance.py) runs the checker over every case
+# and compares actual vs. expected to compute a per-rule / per-tier confusion
+# matrix (true/false positives & negatives, precision, recall). This is what
+# it means to "tune prompts and thresholds against the eval set":
+# change a rule or the judge prompt, re-run, and see whether FP/FN went down.
+#
+# A document is given by `doc_ref` (id of a checkable corpus/draft document) OR
+# `doc_inline` (a full document dict, for surgical variants we don't want in the
+# UI corpus). `expected` maps rule id -> the verdict a correct checker produces.
+#
+# `expected` is the GROUND TRUTH regardless of tier. The deterministic tiers
+# (structure/traceability) are graded on every run. The content tier
+# (llm_judge) only grades when the harness runs with --content (needs Ollama);
+# without it those rules report `skipped` and are counted as "ungraded", not as
+# errors. Include compliant docs (real SRS + a reworded variant) so we measure
+# false POSITIVES, not just recall on broken drafts.
+
+# --------------------------------------------------------------------------- #
+#  Compliant baselines — nothing should be flagged (false-positive guards).
+# --------------------------------------------------------------------------- #
+- name: real-srs-baseline
+  doc_ref: CMMI-IT-005
+  note: >
+    The approved baseline SRS (v1.0). Every rule must pass; any failure here is a
+    false positive.
+  expected:
+    RULE-SRS-STRUCT-001: pass
+    RULE-SRS-STRUCT-002: pass
+    RULE-SRS-STRUCT-003: pass
+    RULE-SRS-STRUCT-004: pass
+    RULE-SRS-STRUCT-006: pass
+    RULE-SRS-STRUCT-007: pass
+    RULE-SRS-META-005: pass
+    RULE-SRS-TRACE-010: pass
+    RULE-SRS-TRACE-011: pass
+    RULE-SRS-CONTENT-020: pass
+    RULE-SRS-CONTENT-021: pass
+    RULE-SRS-CONTENT-022: pass
+    RULE-SRS-CONTENT-023: pass
+    RULE-SRS-CONTENT-024: pass
+
+- name: reworded-compliant-srs
+  note: >
+    A fully compliant SRS whose content is PARAPHRASED (different wording from the
+    baseline). Guards content-tier false positives: the judge must still pass
+    security/performance/continuity even when they aren't phrased like the source.
+  doc_inline:
+    id: EVAL-SRS-REWORDED
+    doc_kind: SRS
+    title: Sistem Gereksinim Spesifikasyonu (SRS) - Alternatif İfade
+    department: Mühendislik
+    document_type: procedure
+    status: published
+    version: "1.0"
+    author: Değerlendirme Seti
+    language: TR
+    content: |
+      Sistem Gereksinim Spesifikasyonu (SRS) - Mobil Self-Servis
+      CMMI-IT-2025-014
+      Prepared By: | Recommended By: | Approved By:
+      Revision History
+      VER NO. | DATE | PREPARED BY | APPROVED BY | CHANGES
+      0.1 | 01/03/2025 | Ekip | Ekip | İlk taslak.
+      0.9 | 05/03/2025 | Ekip | Ekip | İç gözden geçirme.
+      1.0 | 10/03/2025 | Ekip | Ekip | Onaylandı (baseline).
+      1.0 Introduction
+      Purpose | Bu belge sistem gereksinimlerini tanımlar.
+      Scope
+      Sistem mobil self-servis işlemlerini kapsar. Web self-servis portalı ve
+      kurumsal (B2B) abonelik yönetimi bu belgenin kapsamı DIŞINDADIR.
+      Functional Requirements
+      FR-01 | Giriş | Kullanıcı güvenli oturum açar.
+      FR-02 | Ödeme | Kullanıcı fatura öder.
+      FR-03 | Paket | Kullanıcı paket değiştirir.
+      Performance Requirements
+      Sistem saniyede en az 500 işlemi (500 TPS) sürdürür, en fazla 2 saniye
+      yanıt süresiyle ve aynı anda 50.000 kullanıcıyı destekler.
+      Security Requirements
+      Erişim, jeton tabanlı oturum ile doğrulanır ve rollere göre kısıtlanır.
+      Veriler beklerken ve iletilirken uçtan uca şifrelenir (TLS ve depoda
+      AES-256). Tüm finansal işlemler için değiştirilemez bir iz kaydı tutulur.
+      Service Management Requirements
+      Hizmet, yılın %99,9 oranında erişilebilir olmalıdır. Felaket durumunda en
+      fazla 15 dakikalık veri kaybı (RPO) ve 2 saatlik kurtarma süresi (RTO)
+      hedeflenir.
+      Error Messages and Exception Handling
+      Hatalı işlemlerde sistem işlemi güvenli biçimde reddeder, değişiklikleri
+      geri alır (rollback) ve kullanıcıyı anlaşılır bir mesajla bilgilendirir.
+      7.0 References
+      BUR – Business User Requirements (CMMI-IT-004), v1.0
+      TRF – Technical Requirements Form (CMMI-IT-001), v1.0
+  expected:
+    RULE-SRS-STRUCT-001: pass
+    RULE-SRS-STRUCT-002: pass
+    RULE-SRS-STRUCT-003: pass
+    RULE-SRS-STRUCT-004: pass
+    RULE-SRS-STRUCT-006: pass
+    RULE-SRS-STRUCT-007: pass
+    RULE-SRS-META-005: pass
+    RULE-SRS-TRACE-010: pass
+    RULE-SRS-TRACE-011: pass
+    RULE-SRS-CONTENT-020: pass
+    RULE-SRS-CONTENT-021: pass
+    RULE-SRS-CONTENT-022: pass
+    RULE-SRS-CONTENT-023: pass
+    RULE-SRS-CONTENT-024: pass
+
+# --------------------------------------------------------------------------- #
+#  Defective drafts — the checker must catch these (recall).
+# --------------------------------------------------------------------------- #
+- name: original-draft
+  doc_ref: CMMI-IT-005-DRAFT
+  note: >
+    The first incomplete draft: missing revision history/security/scope, a
+    dangling reference, and (having no real prose) every content rule should fail.
+  expected:
+    RULE-SRS-STRUCT-001: fail   # no Revision History (blocker)
+    RULE-SRS-STRUCT-002: fail   # no Security Requirements section
+    RULE-SRS-STRUCT-003: pass   # signature block present
+    RULE-SRS-STRUCT-004: pass   # References section present
+    RULE-SRS-STRUCT-006: fail   # no Scope section
+    RULE-SRS-STRUCT-007: pass   # Functional Requirements present
+    RULE-SRS-META-005: fail     # version 0.9
+    RULE-SRS-TRACE-010: fail    # references CMMI-IT-999 (does not resolve)
+    RULE-SRS-TRACE-011: pass    # FR ids + BUR exists
+    RULE-SRS-CONTENT-020: fail
+    RULE-SRS-CONTENT-021: fail
+    RULE-SRS-CONTENT-022: fail
+    RULE-SRS-CONTENT-023: fail
+    RULE-SRS-CONTENT-024: fail
+
+- name: content-gaps-draft
+  doc_ref: CMMI-IT-005-DRAFT-B
+  note: >
+    Structurally complete (structure + traceability all pass) but the prose is
+    weak. The whole point of this case is content-tier RECALL: the judge must
+    catch the four content gaps and NOT flag the one section that is fine (024).
+  expected:
+    RULE-SRS-STRUCT-001: pass
+    RULE-SRS-STRUCT-002: pass
+    RULE-SRS-STRUCT-003: pass
+    RULE-SRS-STRUCT-004: pass
+    RULE-SRS-STRUCT-006: pass
+    RULE-SRS-STRUCT-007: pass
+    RULE-SRS-META-005: fail     # version 0.9
+    RULE-SRS-TRACE-010: pass
+    RULE-SRS-TRACE-011: pass
+    RULE-SRS-CONTENT-020: fail  # Scope states no exclusions
+    RULE-SRS-CONTENT-021: fail  # performance has no numeric targets
+    RULE-SRS-CONTENT-022: fail  # security omits encryption + audit log
+    RULE-SRS-CONTENT-023: fail  # service continuity has no %/RPO/RTO
+    RULE-SRS-CONTENT-024: pass  # error/exception handling IS described
+
+- name: skeleton-draft
+  doc_ref: CMMI-IT-005-DRAFT-C
+  note: >
+    An early skeleton missing most required structure. Exercises the structure
+    tier; with nothing written the content rules should all fail too.
+  expected:
+    RULE-SRS-STRUCT-001: fail   # no Revision History (blocker)
+    RULE-SRS-STRUCT-002: fail   # no Security Requirements
+    RULE-SRS-STRUCT-003: fail   # no signature block
+    RULE-SRS-STRUCT-004: fail   # no References
+    RULE-SRS-STRUCT-006: fail   # no Scope
+    RULE-SRS-STRUCT-007: pass   # Functional Requirements present
+    RULE-SRS-META-005: fail     # version 0.1
+    RULE-SRS-TRACE-010: pass    # no references to resolve
+    RULE-SRS-TRACE-011: pass    # FR ids + BUR exists
+    RULE-SRS-CONTENT-020: fail
+    RULE-SRS-CONTENT-021: fail
+    RULE-SRS-CONTENT-022: fail
+    RULE-SRS-CONTENT-023: fail
+    RULE-SRS-CONTENT-024: fail
+
+# --------------------------------------------------------------------------- #
+#  Borderline content-tier cases — where the LLM judge is most likely to slip.
+#  Each doc is otherwise fully compliant (deterministic tiers all pass) and
+#  deviates in exactly ONE content section, so a wrong content label is a clean
+#  false positive or false negative. These are the cases that actually drive
+#  judge-prompt tuning; the easy drafts above mostly confirm the obvious.
+# --------------------------------------------------------------------------- #
+- name: security-missing-audit-log
+  note: >
+    FALSE-NEGATIVE risk. Security covers authentication + encryption but omits the
+    audit log. CONTENT-022 requires ALL of must_cover [authentication, encryption,
+    audit log], so the correct verdict is FAIL — a lenient judge that sees "looks
+    secure" will wrongly pass it.
+  doc_inline:
+    id: EVAL-SRS-SEC-NOAUDIT
+    doc_kind: SRS
+    title: SRS - Güvenlik denetim kaydı eksik
+    department: Mühendislik
+    document_type: procedure
+    status: published
+    version: "1.0"
+    author: Değerlendirme Seti
+    language: TR
+    content: |
+      Sistem Gereksinim Spesifikasyonu (SRS) - Mobil Self-Servis
+      CMMI-IT-2025-014
+      Prepared By: | Recommended By: | Approved By:
+      Revision History
+      VER NO. | DATE | PREPARED BY | APPROVED BY | CHANGES
+      0.1 | 01/03/2025 | Ekip | Ekip | İlk taslak.
+      0.9 | 05/03/2025 | Ekip | Ekip | İç gözden geçirme.
+      1.0 | 10/03/2025 | Ekip | Ekip | Onaylandı (baseline).
+      1.0 Introduction
+      Purpose | Sistem gereksinimlerini tanımlar.
+      Scope
+      Sistem mobil self-servis işlemlerini kapsar. Web self-servis portalı ve
+      kurumsal (B2B) abonelik yönetimi bu belgenin kapsamı DIŞINDADIR.
+      Functional Requirements
+      FR-01 | Giriş | Kullanıcı güvenli oturum açar.
+      FR-02 | Ödeme | Kullanıcı fatura öder.
+      FR-03 | Paket | Kullanıcı paket değiştirir.
+      Performance Requirements
+      Sistem saniyede 500 işlemi (500 TPS) ve 50.000 eşzamanlı kullanıcıyı en
+      fazla 2 saniye yanıt süresiyle karşılamalıdır.
+      Security Requirements
+      Erişim OAuth2/JWT ile doğrulanır ve rol tabanlı yetkilendirme uygulanır.
+      Veriler beklerken AES-256, iletimde TLS 1.2+ ile uçtan uca şifrelenir.
+      Service Management Requirements
+      Hizmet %99,9 oranında erişilebilir olmalıdır. Felaket kurtarma için RPO en
+      fazla 15 dakika, RTO en fazla 2 saattir.
+      Error Messages and Exception Handling
+      Hatalı işlemlerde sistem işlemi güvenli biçimde reddeder, değişiklikleri
+      geri alır (rollback) ve kullanıcıyı anlaşılır bir mesajla bilgilendirir.
+      7.0 References
+      BUR – Business User Requirements (CMMI-IT-004), v1.0
+      TRF – Technical Requirements Form (CMMI-IT-001), v1.0
+  expected:
+    RULE-SRS-STRUCT-001: pass
+    RULE-SRS-STRUCT-002: pass
+    RULE-SRS-STRUCT-003: pass
+    RULE-SRS-STRUCT-004: pass
+    RULE-SRS-STRUCT-006: pass
+    RULE-SRS-STRUCT-007: pass
+    RULE-SRS-META-005: pass
+    RULE-SRS-TRACE-010: pass
+    RULE-SRS-TRACE-011: pass
+    RULE-SRS-CONTENT-020: pass
+    RULE-SRS-CONTENT-021: pass
+    RULE-SRS-CONTENT-022: fail   # audit log missing (partial must_cover)
+    RULE-SRS-CONTENT-023: pass
+    RULE-SRS-CONTENT-024: pass
+
+- name: continuity-missing-rpo
+  note: >
+    FALSE-NEGATIVE risk. Service continuity gives an availability % and an RTO but
+    no RPO. CONTENT-023 must_cover [availability, RPO, RTO], so correct = FAIL. A
+    judge that accepts "has numbers and mentions DR" will wrongly pass it.
+  doc_inline:
+    id: EVAL-SRS-NORPO
+    doc_kind: SRS
+    title: SRS - RPO eksik
+    department: Mühendislik
+    document_type: procedure
+    status: published
+    version: "1.0"
+    author: Değerlendirme Seti
+    language: TR
+    content: |
+      Sistem Gereksinim Spesifikasyonu (SRS) - Mobil Self-Servis
+      CMMI-IT-2025-014
+      Prepared By: | Recommended By: | Approved By:
+      Revision History
+      VER NO. | DATE | PREPARED BY | APPROVED BY | CHANGES
+      0.1 | 01/03/2025 | Ekip | Ekip | İlk taslak.
+      0.9 | 05/03/2025 | Ekip | Ekip | İç gözden geçirme.
+      1.0 | 10/03/2025 | Ekip | Ekip | Onaylandı (baseline).
+      1.0 Introduction
+      Purpose | Sistem gereksinimlerini tanımlar.
+      Scope
+      Sistem mobil self-servis işlemlerini kapsar. Web self-servis portalı ve
+      kurumsal (B2B) abonelik yönetimi bu belgenin kapsamı DIŞINDADIR.
+      Functional Requirements
+      FR-01 | Giriş | Kullanıcı güvenli oturum açar.
+      FR-02 | Ödeme | Kullanıcı fatura öder.
+      FR-03 | Paket | Kullanıcı paket değiştirir.
+      Performance Requirements
+      Sistem saniyede 500 işlemi (500 TPS) ve 50.000 eşzamanlı kullanıcıyı en
+      fazla 2 saniye yanıt süresiyle karşılamalıdır.
+      Security Requirements
+      Erişim OAuth2/JWT ile doğrulanır, rol tabanlı yetkilendirme uygulanır.
+      Veriler beklerken AES-256, iletimde TLS 1.2+ ile şifrelenir. Tüm finansal
+      işlemler için denetim kaydı (audit log) tutulur.
+      Service Management Requirements
+      Hizmet %99,9 oranında erişilebilir olmalıdır. Felaket durumunda kurtarma
+      süresi (RTO) en fazla 2 saattir.
+      Error Messages and Exception Handling
+      Hatalı işlemlerde sistem işlemi güvenli biçimde reddeder, değişiklikleri
+      geri alır (rollback) ve kullanıcıyı anlaşılır bir mesajla bilgilendirir.
+      7.0 References
+      BUR – Business User Requirements (CMMI-IT-004), v1.0
+      TRF – Technical Requirements Form (CMMI-IT-001), v1.0
+  expected:
+    RULE-SRS-STRUCT-001: pass
+    RULE-SRS-STRUCT-002: pass
+    RULE-SRS-STRUCT-003: pass
+    RULE-SRS-STRUCT-004: pass
+    RULE-SRS-STRUCT-006: pass
+    RULE-SRS-STRUCT-007: pass
+    RULE-SRS-META-005: pass
+    RULE-SRS-TRACE-010: pass
+    RULE-SRS-TRACE-011: pass
+    RULE-SRS-CONTENT-020: pass
+    RULE-SRS-CONTENT-021: pass
+    RULE-SRS-CONTENT-022: pass
+    RULE-SRS-CONTENT-023: fail   # RPO missing (partial must_cover)
+    RULE-SRS-CONTENT-024: pass
+
+- name: performance-technical-no-numbers
+  note: >
+    FALSE-NEGATIVE risk. Performance reads as technical/engineered ("low latency,
+    horizontally scalable, stable under load") but states NO measurable target.
+    CONTENT-021 wants concrete numbers, so correct = FAIL. A judge swayed by
+    technical-sounding prose will wrongly pass it.
+  doc_inline:
+    id: EVAL-SRS-PERF-VAGUE
+    doc_kind: SRS
+    title: SRS - Performans sayısal hedef yok
+    department: Mühendislik
+    document_type: procedure
+    status: published
+    version: "1.0"
+    author: Değerlendirme Seti
+    language: TR
+    content: |
+      Sistem Gereksinim Spesifikasyonu (SRS) - Mobil Self-Servis
+      CMMI-IT-2025-014
+      Prepared By: | Recommended By: | Approved By:
+      Revision History
+      VER NO. | DATE | PREPARED BY | APPROVED BY | CHANGES
+      0.1 | 01/03/2025 | Ekip | Ekip | İlk taslak.
+      0.9 | 05/03/2025 | Ekip | Ekip | İç gözden geçirme.
+      1.0 | 10/03/2025 | Ekip | Ekip | Onaylandı (baseline).
+      1.0 Introduction
+      Purpose | Sistem gereksinimlerini tanımlar.
+      Scope
+      Sistem mobil self-servis işlemlerini kapsar. Web self-servis portalı ve
+      kurumsal (B2B) abonelik yönetimi bu belgenin kapsamı DIŞINDADIR.
+      Functional Requirements
+      FR-01 | Giriş | Kullanıcı güvenli oturum açar.
+      FR-02 | Ödeme | Kullanıcı fatura öder.
+      FR-03 | Paket | Kullanıcı paket değiştirir.
+      Performance Requirements
+      Sistem düşük gecikmeyle yanıt vermeli, yatay olarak ölçeklenebilmeli ve
+      yük altında kararlı kalmalıdır. Mimari yüksek hacimli trafiği kaldıracak
+      şekilde tasarlanmalıdır.
+      Security Requirements
+      Erişim OAuth2/JWT ile doğrulanır, rol tabanlı yetkilendirme uygulanır.
+      Veriler beklerken AES-256, iletimde TLS 1.2+ ile şifrelenir. Tüm finansal
+      işlemler için denetim kaydı (audit log) tutulur.
+      Service Management Requirements
+      Hizmet %99,9 oranında erişilebilir olmalıdır. Felaket kurtarma için RPO en
+      fazla 15 dakika, RTO en fazla 2 saattir.
+      Error Messages and Exception Handling
+      Hatalı işlemlerde sistem işlemi güvenli biçimde reddeder, değişiklikleri
+      geri alır (rollback) ve kullanıcıyı anlaşılır bir mesajla bilgilendirir.
+      7.0 References
+      BUR – Business User Requirements (CMMI-IT-004), v1.0
+      TRF – Technical Requirements Form (CMMI-IT-001), v1.0
+  expected:
+    RULE-SRS-STRUCT-001: pass
+    RULE-SRS-STRUCT-002: pass
+    RULE-SRS-STRUCT-003: pass
+    RULE-SRS-STRUCT-004: pass
+    RULE-SRS-STRUCT-006: pass
+    RULE-SRS-STRUCT-007: pass
+    RULE-SRS-META-005: pass
+    RULE-SRS-TRACE-010: pass
+    RULE-SRS-TRACE-011: pass
+    RULE-SRS-CONTENT-020: pass
+    RULE-SRS-CONTENT-021: fail   # no measurable numeric target
+    RULE-SRS-CONTENT-022: pass
+    RULE-SRS-CONTENT-023: pass
+    RULE-SRS-CONTENT-024: pass
+
+- name: scope-soft-exclusion-compliant
+  note: >
+    FALSE-POSITIVE risk. The scope DOES state exclusions but softly ("ele
+    alınmaz", "sonraki fazlara ertelenmiştir") rather than the literal phrase
+    "kapsam dışı". Correct = PASS. A judge fixated on exact wording will wrongly
+    fail it.
+  doc_inline:
+    id: EVAL-SRS-SCOPE-SOFT
+    doc_kind: SRS
+    title: SRS - Kapsam dışı yumuşak ifade
+    department: Mühendislik
+    document_type: procedure
+    status: published
+    version: "1.0"
+    author: Değerlendirme Seti
+    language: TR
+    content: |
+      Sistem Gereksinim Spesifikasyonu (SRS) - Mobil Self-Servis
+      CMMI-IT-2025-014
+      Prepared By: | Recommended By: | Approved By:
+      Revision History
+      VER NO. | DATE | PREPARED BY | APPROVED BY | CHANGES
+      0.1 | 01/03/2025 | Ekip | Ekip | İlk taslak.
+      0.9 | 05/03/2025 | Ekip | Ekip | İç gözden geçirme.
+      1.0 | 10/03/2025 | Ekip | Ekip | Onaylandı (baseline).
+      1.0 Introduction
+      Purpose | Sistem gereksinimlerini tanımlar.
+      Scope
+      Sistem yalnızca bireysel abonelerin mobil self-servis işlemlerine
+      odaklanır. Kurumsal (B2B) abonelik yönetimi ve web self-servis portalı bu
+      fazda ele alınmaz; sonraki sürümlere ertelenmiştir.
+      Functional Requirements
+      FR-01 | Giriş | Kullanıcı güvenli oturum açar.
+      FR-02 | Ödeme | Kullanıcı fatura öder.
+      FR-03 | Paket | Kullanıcı paket değiştirir.
+      Performance Requirements
+      Sistem saniyede 500 işlemi (500 TPS) ve 50.000 eşzamanlı kullanıcıyı en
+      fazla 2 saniye yanıt süresiyle karşılamalıdır.
+      Security Requirements
+      Erişim OAuth2/JWT ile doğrulanır, rol tabanlı yetkilendirme uygulanır.
+      Veriler beklerken AES-256, iletimde TLS 1.2+ ile şifrelenir. Tüm finansal
+      işlemler için denetim kaydı (audit log) tutulur.
+      Service Management Requirements
+      Hizmet %99,9 oranında erişilebilir olmalıdır. Felaket kurtarma için RPO en
+      fazla 15 dakika, RTO en fazla 2 saattir.
+      Error Messages and Exception Handling
+      Hatalı işlemlerde sistem işlemi güvenli biçimde reddeder, değişiklikleri
+      geri alır (rollback) ve kullanıcıyı anlaşılır bir mesajla bilgilendirir.
+      7.0 References
+      BUR – Business User Requirements (CMMI-IT-004), v1.0
+      TRF – Technical Requirements Form (CMMI-IT-001), v1.0
+  expected:
+    RULE-SRS-STRUCT-001: pass
+    RULE-SRS-STRUCT-002: pass
+    RULE-SRS-STRUCT-003: pass
+    RULE-SRS-STRUCT-004: pass
+    RULE-SRS-STRUCT-006: pass
+    RULE-SRS-STRUCT-007: pass
+    RULE-SRS-META-005: pass
+    RULE-SRS-TRACE-010: pass
+    RULE-SRS-TRACE-011: pass
+    RULE-SRS-CONTENT-020: pass   # exclusions ARE stated, just softly worded
+    RULE-SRS-CONTENT-021: pass
+    RULE-SRS-CONTENT-022: pass
+    RULE-SRS-CONTENT-023: pass
+    RULE-SRS-CONTENT-024: pass

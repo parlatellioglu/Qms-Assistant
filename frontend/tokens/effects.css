@@ -1,0 +1,29 @@
+/* ============================================================
+   QMS Assistant — Effects: shadows, borders, motion
+   Restrained, soft, cool-toned shadows (blue-tinted) for a
+   clean enterprise feel. No heavy drop shadows.
+   ============================================================ */
+
+:root {
+  /* Elevation — cool/blue-tinted, low spread */
+  --shadow-xs:  0 1px 2px rgba(4, 34, 60, 0.06);
+  --shadow-sm:  0 1px 3px rgba(4, 34, 60, 0.08), 0 1px 2px rgba(4, 34, 60, 0.04);
+  --shadow-md:  0 4px 12px rgba(4, 34, 60, 0.08), 0 2px 4px rgba(4, 34, 60, 0.05);
+  --shadow-lg:  0 12px 28px rgba(4, 34, 60, 0.12), 0 4px 8px rgba(4, 34, 60, 0.06);
+  --shadow-drawer: -8px 0 28px rgba(4, 34, 60, 0.10);
+
+  /* Focus ring */
+  --focus-ring: 0 0 0 3px rgba(3, 96, 169, 0.28);
+
+  /* Borders */
+  --border-width: 1px;
+  --border-hair:  1px solid var(--border-subtle);
+  --border-line:  1px solid var(--border-default);
+
+  /* Motion */
+  --ease-out:   cubic-bezier(0.22, 1, 0.36, 1); /* @kind other */
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1); /* @kind other */
+  --dur-fast:   120ms; /* @kind other */
+  --dur-base:   200ms; /* @kind other */
+  --dur-slow:   320ms; /* @kind other */
+}

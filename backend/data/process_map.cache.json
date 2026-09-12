@@ -1,0 +1,114 @@
+{
+ "CMMI-IT-001_TRF": {
+  "fingerprint": "1781512172:40022",
+  "verdict": {
+   "process_defining": false,
+   "confidence": 0.95,
+   "reason": "This document is a specific Technical Requirements Form for the 'Mobil Self-Servis Uygulaması' project."
+  }
+ },
+ "CMMI-IT-002_Tech Reco": {
+  "fingerprint": "1781512172:42433",
+  "verdict": {
+   "process_defining": false,
+   "confidence": 0.95,
+   "reason": "This document provides detailed requirements and technical specifications for a specific project (Mobil Self-Servis Uygulaması)."
+  }
+ },
+ "CMMI-IT-003_PMP": {
+  "fingerprint": "1781512172:29133",
+  "verdict": {
+   "process_defining": false,
+   "confidence": 0.9,
+   "reason": "The document is a Project Management Plan for the specific 'Mobil Self-Servis Uygulaması (MSS)' project."
+  }
+ },
+ "CMMI-IT-004_BUR": {
+  "fingerprint": "1781512172:21951",
+  "verdict": {
+   "process_defining": false,
+   "confidence": 0.95,
+   "reason": "This document contains specific requirements (e.g., BUR-001 to BUR-015) for a single application, making it an output instance."
+  }
+ },
+ "CMMI-IT-005_SRS": {
+  "fingerprint": "1781512173:41512",
+  "verdict": {
+   "process_defining": false,
+   "confidence": 1.0,
+   "reason": "This document is a specific System Requirements Specification (SRS) for the MSS application, detailing concrete requirements and scope."
+  }
+ },
+ "CMMI-IT-006_DSAD": {
+  "fingerprint": "1781512173:40200",
+  "verdict": {
+   "process_defining": false,
+   "confidence": 0.98,
+   "reason": "This document details the specific architecture and design for a single application (Mobil Self-Servis Uygulaması)."
+  }
+ },
+ "CMMI-IT-007_SAT Plan": {
+  "fingerprint": "1781512173:39702",
+  "verdict": {
+   "process_defining": false,
+   "confidence": 0.95,
+   "reason": "This document is a specific SAT Plan for the 'Mobil Self-Servis Uygulaması' project, referencing specific dates and modules."
+  }
+ },
+ "CMMI-IT-008_UAT Plan": {
+  "fingerprint": "1781512173:39746",
+  "verdict": {
+   "process_defining": false,
+   "confidence": 0.95,
+   "reason": "This document is a specific UAT plan for the 'Mobil Self-Servis Uygulaması' project, referencing specific dates and modules."
+  }
+ },
+ "CMMI-IT-SAT Certificate": {
+  "fingerprint": "1781512173:37100",
+  "verdict": {
+   "process_defining": false,
+   "confidence": 1.0,
+   "reason": "This is a signed certificate confirming the completion and acceptance of one specific project."
+  }
+ },
+ "CMMI-IT-UAT Certificate": {
+  "fingerprint": "1781512173:37156",
+  "verdict": {
+   "process_defining": false,
+   "confidence": 1.0,
+   "reason": "This is a signed certificate confirming the completion and acceptance of one specific project."
+  }
+ },
+ "CMMI-IT_011_Project Close-out Report": {
+  "fingerprint": "1781512173:41264",
+  "verdict": {
+   "process_defining": false,
+   "confidence": 1.0,
+   "reason": "This document is a completed report detailing the specific outcomes and metrics of one finished project."
+  }
+ },
+ "CMMI-IT-009_SAT Cases": {
+  "fingerprint": "1781769612:8587",
+  "verdict": {
+   "process_defining": false,
+   "confidence": 1.0,
+   "reason": "This document is a filled-out log of specific test cases and their results for one system implementation."
+  }
+ },
+ "CMMI-IT-010_UAT Cases": {
+  "fingerprint": "1781769612:8279",
+  "verdict": {
+   "process_defining": false,
+   "confidence": 1.0,
+   "reason": "This document is a filled-out log of test cases for a specific system release."
+  }
+ },
+ "SDLC Process_1": {
+  "fingerprint": "1781769305:3918549",
+  "verdict": {
+   "process_defining": true,
+   "confidence": 1.0,
+   "reason": "The document outlines a structured life cycle (Ideation to Post Launch) and detailed phases/activities for delivering solutions."
+  }
+ }
+}

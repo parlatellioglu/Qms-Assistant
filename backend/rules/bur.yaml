@@ -1,0 +1,29 @@
+# Compliance rules for the Business Unit Requirements (BUR) template.
+# Authored through the UI rules editor rather than by hand, which is why these
+# are terser than srs.yaml — they show what a rule looks like when quality staff
+# write one in plain language. See backend/rules/README.md for the schema.
+
+- id: RULE-BUR-001
+  applies_to:
+    doc_kind: BUR
+  tier: content
+  severity: high
+  statement: The document must be no longer than 2 pages.
+  check:
+    type: llm_judge
+    criterion: Is the document no longer than 2 pages?
+    require_citation: true
+  source: ''
+  fix_hint: ''
+- id: RULE-BUR-002
+  applies_to:
+    doc_kind: BUR
+  tier: content
+  severity: high
+  statement: The document must be a .docx file.
+  check:
+    type: llm_judge
+    criterion: Is the document a .docx file?
+    require_citation: true
+  source: ''
+  fix_hint: ''

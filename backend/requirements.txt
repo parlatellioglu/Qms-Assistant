@@ -1,0 +1,22 @@
+# Backend runtime dependencies (installed into the Docker image).
+# NOTE: torch is installed separately in the Dockerfile (CPU-only wheel) before
+# this file, so it is intentionally NOT listed here.
+# sentence-transformers / transformers / numpy are pulled in transitively by
+# FlagEmbedding, so they are not listed explicitly.
+fastapi
+uvicorn
+pydantic
+qdrant-client
+FlagEmbedding
+# Compliance Checker rule sets (backend/rules/*.yaml) are loaded at runtime.
+PyYAML
+# Round-trip YAML (preserves comments/formatting) for the rules editor API,
+# so UI edits don't wipe the hand-authored comments in backend/rules/*.yaml.
+ruamel.yaml
+# Document upload (Compliance Checker): multipart form parsing + the same file
+# extractors the corpus build uses, so an uploaded Word/Excel/PowerPoint file is
+# flattened to text and checked against the rules.
+python-multipart
+python-docx
+openpyxl
+python-pptx

@@ -1,0 +1,35 @@
+# RAG test soruları — docs/TEST-QUESTIONS.md dosyasından üretildi.
+# Bir satır = bir soru. Boş satırlar ve # ile başlayan satırlar yok sayılır.
+
+
+# === Nokta Atışı — Spesifik Bilgi ===
+Bir SRS'te güvenlik gereksinimleri en az hangi başlıkları (kimlik doğrulama, yetkilendirme, şifreleme, denetim kaydı) kapsamalıdır?
+What exit criteria must be met before the SAT acceptance certificate is issued?
+TRF hangi iki rol tarafından imzalanır ve hangi aşamada temellenir (baseline)?
+Which record demonstrates bi-directional traceability between requirements and test cases?
+
+# === Genel & Kavramsal ===
+CMMI tabanlı kalite süreci projelerde neyi amaçlar ve hangi ana aşamalardan oluşur?
+Give an overview of the full set of documents produced across a project's life cycle.
+Which quality-assurance (SQA) checkpoints occur throughout the process?
+
+# === Karşılaştırma & Çapraz Doküman ===
+SAT ile UAT arasındaki fark nedir; her biri neyi doğrular?
+How do the BUR, TRF, SRS and DSAD documents feed into one another?
+Compare the Prepared / Recommended / Approved sign-off roles across the PMP and the SRS.
+
+# === Süreç & Sıradaki Adım ===
+SRS'i yazıp onaylattım; süreçte sıradaki adım ve hangi doküman nedir?
+I've completed the detailed design (DSAD) — what must happen before development begins?
+Sistem kabul testi (SAT) başarıyla geçti; UAT'ye geçmek için ne yapmalıyım?
+
+# === Tablo & Sunum Verisi ===
+SAT test senaryolarına göre, bir hesabın kilitlenmesi için kaç ardışık hatalı OTP denemesi gerekir?
+According to the SAT test cases, what response-time target and sustained TPS capacity do the performance/load tests verify?
+SAT senaryolarında KVKK açısından test ortamında üretim verisi nasıl kullanılmalıdır?
+In the SDLC process slides, what are the high-level life-cycle phases from ideation to launch?
+
+# === Kapsam Dışı & Fallback ===
+Bu projedeki mobil uygulamanın kod deposunun (repository) Git adresi nedir?
+What is the production server IP address and database password for the deployment?
+Ekip üyelerinin maaş bilgileri hangi belgede yer alıyor?

@@ -1,0 +1,483 @@
+{
+  "generated_by": "scripts/populate/build_process_map.py",
+  "model": "gemma4:e4b",
+  "processes": [
+    {
+      "document": "SDLC Process_1",
+      "phases": [
+        {
+          "name": "Ideation",
+          "order": 1,
+          "sources": [
+            {
+              "doc": "SDLC Process_1",
+              "locator": "slides 15, 17",
+              "quote": "Idea generation and creation of high-level business concepts"
+            }
+          ],
+          "section_marker": "20",
+          "deliverables": [
+            {
+              "name": "Rough Order of Magnitude (ROM)",
+              "source": {
+                "doc": "SDLC Process_1",
+                "locator": "slides 20-23",
+                "quote": "If in Ideation Stage, Rough Order of Magnitude (ROM) contains rough estimates on technical feasibility, timelines and cost."
+              }
+            }
+          ],
+          "entry_criteria": [],
+          "exit_criteria": [
+            {
+              "text": "For projects with significant IT impact",
+              "source": {
+                "doc": "SDLC Process_1",
+                "locator": "slides 20-23",
+                "quote": "IT shall be consulted for projects with significant IT impact (i.e. involves the creation or enhancement of an IT system)."
+              }
+            },
+            {
+              "text": "If in Ideation Stage, Rough Order of Magnitude (ROM) contains rough estimates on technical feasibility, timelines and cost.",
+              "source": {
+                "doc": "SDLC Process_1",
+                "locator": "slides 20-23",
+                "quote": "If in Ideation Stage, Rough Order of Magnitude (ROM) contains rough estimates on technical feasibility, timelines and cost."
+              }
+            },
+            {
+              "text": "IT effort shall not take longer than 4 man-hours. Otherwise, request will be treated as if in Scoping Stage (i.e. Systems Service Request required, more man-hours to be earmarked in Resource Management Model)",
+              "source": {
+                "doc": "SDLC Process_1",
+                "locator": "slides 20-23",
+                "quote": "IT effort shall not take longer than 4 man-hours. Otherwise, request will be treated as if in Scoping Stage (i.e. Systems Service Request required, more man-hours to be earmarked in Resource Managemen"
+              }
+            }
+          ],
+          "policies": [
+            {
+              "text": "IT shall be consulted for projects with significant IT impact (i.e. involves the creation or enhancement of an IT system).",
+              "source": {
+                "doc": "SDLC Process_1",
+                "locator": "slides 20-23",
+                "quote": "IT shall be consulted for projects with significant IT impact (i.e. involves the creation or enhancement of an IT system)."
+              }
+            },
+            {
+              "text": "IT’s technical inputs are non-binding and subject to change once project requirements have been comprehensively studied (during Scoping Stage)",
+              "source": {
+                "doc": "SDLC Process_1",
+                "locator": "slides 20-23",
+                "quote": "IT’s technical inputs are non-binding and subject to change once project requirements have been comprehensively studied (during Scoping Stage)"
+              }
+            }
+          ],
+          "gate": null
+        },
+        {
+          "name": "Scoping",
+          "order": 2,
+          "sources": [
+            {
+              "doc": "SDLC Process_1",
+              "locator": "slides 15, 17",
+              "quote": "Refinement of product or service; market & technical studies; formulation of a technical and basic financial assessment"
+            }
+          ],
+          "section_marker": "24",
+          "deliverables": [
+            {
+              "name": "Signed TRF",
+              "source": {
+                "doc": "SDLC Process_1",
+                "locator": "slides 24-38",
+                "quote": "PM and TL sign TRF to signify common understanding of requirements.  \n Signed TRF is forwarded to IT Program Manager to trigger start of Tech Reco preparation."
+              }
+            }
+          ],
+          "entry_criteria": [
+            {
+              "text": "System Service Request and Technical Requirements Form are prerequisite documents",
+              "source": {
+                "doc": "SDLC Process_1",
+                "locator": "slides 24-38",
+                "quote": "System Service Request and Technical Requirements Form are prerequisite documents"
+              }
+            }
+          ],
+          "exit_criteria": [
+            {
+              "text": "Cost is greater than or equal to 6M PHP (based on LOA)",
+              "source": {
+                "doc": "SDLC Process_1",
+                "locator": "slides 24-38",
+                "quote": "Cost is greater than or equal to 6M PHP (based on LOA)."
+              }
+            }
+          ],
+          "policies": [
+            {
+              "text": "If in Scoping Stage (with refined product/service ideas intended for Business Case justification), technical recommendations may be used as official basis for business case justification.",
+              "source": {
+                "doc": "SDLC Process_1",
+                "locator": "slides 24-38",
+                "quote": "If in Scoping Stage (with refined product/service ideas intended for Business Case justification), technical recommendations may be used as official basis for business case justification."
+              }
+            },
+            {
+              "text": "Service requests will be subject to a project prioritization review",
+              "source": {
+                "doc": "SDLC Process_1",
+                "locator": "slides 24-38",
+                "quote": "Service requests will be subject to a project prioritization review"
+              }
+            },
+            {
+              "text": "Technical recommendations falling in any of the conditions below will be forwarded to the CIO for review and approval:",
+              "source": {
+                "doc": "SDLC Process_1",
+                "locator": "slides 24-38",
+                "quote": "Technical recommendations falling in any of the conditions below will be forwarded to the CIO for review and approval:"
+              }
+            }
+          ],
+          "gate": {
+            "name": "Approval of Technical Recommendation",
+            "source": {
+              "doc": "SDLC Process_1",
+              "locator": "slides 24-38",
+              "quote": "Gate 1: Approval of Technical Recommendation"
+            }
+          }
+        },
+        {
+          "name": "Build Case",
+          "order": 3,
+          "sources": [
+            {
+              "doc": "SDLC Process_1",
+              "locator": "slides 15, 17",
+              "quote": "Business case development and justification"
+            }
+          ],
+          "section_marker": "39",
+          "deliverables": [],
+          "entry_criteria": [],
+          "exit_criteria": [
+            {
+              "text": "Another round of approvals shall be sought for significant changes to the original technical recommendation.",
+              "source": {
+                "doc": "SDLC Process_1",
+                "locator": "slides 39-42",
+                "quote": "Another round of approvals shall be sought for significant changes to the original technical recommendation."
+              }
+            }
+          ],
+          "policies": [],
+          "gate": null
+        },
+        {
+          "name": "Project Planning",
+          "order": 4,
+          "sources": [
+            {
+              "doc": "SDLC Process_1",
+              "locator": "slides 15, 17",
+              "quote": "Preparation of WBS, project defined process, Risk plan,config plan etc"
+            }
+          ],
+          "section_marker": "43",
+          "deliverables": [
+            {
+              "name": "Project’s Defined Process (PMP)",
+              "source": {
+                "doc": "SDLC Process_1",
+                "locator": "slides 43-63",
+                "quote": "Project’s\nDefined\nProcess (PMP)"
+              }
+            },
+            {
+              "name": "Standard Doc Checklist",
+              "source": {
+                "doc": "SDLC Process_1",
+                "locator": "slides 43-63",
+                "quote": "Standard Doc Checklist"
+              }
+            },
+            {
+              "name": "Resource Requisition Form",
+              "source": {
+                "doc": "SDLC Process_1",
+                "locator": "slides 43-63",
+                "quote": "Resource Requisition Form"
+              }
+            },
+            {
+              "name": "Standard Doc Matrix",
+              "source": {
+                "doc": "SDLC Process_1",
+                "locator": "slides 43-63",
+                "quote": "Standard Doc Matrix"
+              }
+            },
+            {
+              "name": "Project Management Plan",
+              "source": {
+                "doc": "SDLC Process_1",
+                "locator": "slides 43-63",
+                "quote": "Project Management Plan"
+              }
+            },
+            {
+              "name": "CMMI Configuration Mgmt Plan",
+              "source": {
+                "doc": "SDLC Process_1",
+                "locator": "slides 43-63",
+                "quote": "CMMI Configuration\nMgmt Plan"
+              }
+            }
+          ],
+          "entry_criteria": [
+            {
+              "text": "Issuance of PIN (Project Initiation Note) to assigned TL to initiate work on the project. Approved Technical Recommendation is attached to the PIN.",
+              "source": {
+                "doc": "SDLC Process_1",
+                "locator": "slides 43-63",
+                "quote": "Issuance of PIN (Project Initiation Note) to assigned TL to initiate work on the project. Approved Technical Recommendation is attached to the PIN."
+              }
+            }
+          ],
+          "exit_criteria": [
+            {
+              "text": "Project Management Plan is reviewed, signed-off and baselined.",
+              "source": {
+                "doc": "SDLC Process_1",
+                "locator": "slides 43-63",
+                "quote": "Project Management Plan is reviewed, signed-off and baselined."
+              }
+            }
+          ],
+          "policies": [
+            {
+              "text": "For process deviations, PM/TL seeks approval from PMO and ISG Division Heads via ISG’s Deviation Request Form.",
+              "source": {
+                "doc": "SDLC Process_1",
+                "locator": "slides 43-63",
+                "quote": "For process deviations, PM/TL seeks approval from PMO and ISG Division Heads via ISG’s Deviation Request Form."
+              }
+            },
+            {
+              "text": "Any change in the project’s scope, timeline, and/or cost shall be subject to the project change management process.",
+              "source": {
+                "doc": "SDLC Process_1",
+                "locator": "slides 43-63",
+                "quote": "Any change in the project’s scope, timeline, and/or cost shall be subject to the project change management process."
+              }
+            },
+            {
+              "text": "A deviation request form shall be filled out for process deviations. These deviations will be subject to the approval of PMO and ISG Division Heads.",
+              "source": {
+                "doc": "SDLC Process_1",
+                "locator": "slides 43-63",
+                "quote": "A deviation request form shall be filled out for process deviations. These deviations will be subject to the approval of PMO and ISG Division Heads."
+              }
+            }
+          ],
+          "gate": null
+        },
+        {
+          "name": "Procurement",
+          "order": 5,
+          "sources": [
+            {
+              "doc": "SDLC Process_1",
+              "locator": "slides 15, 17",
+              "quote": "Vendor finalization and supplier agreement preparation"
+            }
+          ],
+          "section_marker": "64",
+          "deliverables": [],
+          "entry_criteria": [
+            {
+              "text": "For ISG-initiated projects, verification of ERP PR amount against approved Biz Case/Memo is done by ISG Budget Controller prior to endorsement to Purchasing for the creation of PO.",
+              "source": {
+                "doc": "SDLC Process_1",
+                "locator": "slides 64-end",
+                "quote": "For ISG-initiated projects, verification of ERP PR amount against approved Biz Case/Memo is done by ISG Budget Controller prior to endorsement to Purchasing for the creation of PO."
+              }
+            }
+          ],
+          "exit_criteria": [
+            {
+              "text": "Mandatory during Scoping (Selection of Solution Model – Tech Reco) and Procurement (Selection of Supplier)",
+              "source": {
+                "doc": "SDLC Process_1",
+                "locator": "slides 64-end",
+                "quote": "Mandatory during Scoping (Selection of Solution Model – Tech Reco) and Procurement (Selection of Supplier)"
+              }
+            },
+            {
+              "text": "Service Level Agreements shall be set with suppliers and be clearly stated in the Supplier Agreement (contract) to ensure quality of their deliverables (ex. penalties for non-delivery, delays, non-compliance to SLAs).",
+              "source": {
+                "doc": "SDLC Process_1",
+                "locator": "slides 64-end",
+                "quote": "Service Level Agreements shall be set with suppliers and be clearly stated in the Supplier Agreement (contract) to ensure quality of their deliverables (ex. penalties for non-delivery, delays, non-com"
+              }
+            }
+          ],
+          "policies": [
+            {
+              "text": "The Technical Lead leads RFP/supplier evaluation. ISG holds the MAKE* right.",
+              "source": {
+                "doc": "SDLC Process_1",
+                "locator": "slides 64-end",
+                "quote": "The Technical Lead leads RFP/supplier evaluation. ISG holds the MAKE* right."
+              }
+            },
+            {
+              "text": "The Project Manager is in charge of contract management. The contract is generally divided into 3 main areas: functional, technical, and commercial",
+              "source": {
+                "doc": "SDLC Process_1",
+                "locator": "slides 64-end",
+                "quote": "The Project Manager is in charge of contract management. The contract is generally divided into 3 main areas:\nfunctional \ntechnical, and \ncommercial"
+              }
+            },
+            {
+              "text": "The teams to review both functional and commercial terms are headed by the Project Manager, although ISG holds MAKE* right on the maintenance and licensing components given that it is ISG who will be carrying these recurring operating costs in his budget.",
+              "source": {
+                "doc": "SDLC Process_1",
+                "locator": "slides 64-end",
+                "quote": "The teams to review both functional and commercial terms are headed by the Project Manager, although ISG holds MAKE* right on the maintenance and licensing components given that it is ISG who will be "
+              }
+            },
+            {
+              "text": "Service Level Agreements shall be set with suppliers and be clearly stated in the Supplier Agreement (contract) to ensure quality of their deliverables (ex. penalties for non-delivery, delays, non-compliance to SLAs). This is in accordance to the Corporate Procurement Process.",
+              "source": {
+                "doc": "SDLC Process_1",
+                "locator": "slides 64-end",
+                "quote": "Service Level Agreements shall be set with suppliers and be clearly stated in the Supplier Agreement (contract) to ensure quality of their deliverables (ex. penalties for non-delivery, delays, non-com"
+              }
+            },
+            {
+              "text": "Supplier performance shall be closely monitored and tracked by the Technical Lead.",
+              "source": {
+                "doc": "SDLC Process_1",
+                "locator": "slides 64-end",
+                "quote": "Supplier performance shall be closely monitored and tracked by the Technical Lead."
+              }
+            }
+          ],
+          "gate": {
+            "name": "Gate 2: Review of Recommended Supplier",
+            "source": {
+              "doc": "SDLC Process_1",
+              "locator": "slides 64-end",
+              "quote": "Gate 2: Review of Recommended Supplier"
+            }
+          }
+        },
+        {
+          "name": "Requirements Development",
+          "order": 6,
+          "sources": [
+            {
+              "doc": "SDLC Process_1",
+              "locator": "slides 15, 17",
+              "quote": "Preparation of SRS"
+            }
+          ],
+          "section_marker": null,
+          "deliverables": [],
+          "entry_criteria": [],
+          "exit_criteria": [],
+          "policies": [],
+          "gate": null
+        },
+        {
+          "name": "Design",
+          "order": 7,
+          "sources": [
+            {
+              "doc": "SDLC Process_1",
+              "locator": "slides 15, 17",
+              "quote": "Creation of DSAD"
+            }
+          ],
+          "section_marker": null,
+          "deliverables": [],
+          "entry_criteria": [],
+          "exit_criteria": [],
+          "policies": [],
+          "gate": null
+        },
+        {
+          "name": "Development",
+          "order": 8,
+          "sources": [
+            {
+              "doc": "SDLC Process_1",
+              "locator": "slides 15, 17",
+              "quote": "Solution development and supplier monitoring"
+            }
+          ],
+          "section_marker": null,
+          "deliverables": [],
+          "entry_criteria": [],
+          "exit_criteria": [],
+          "policies": [],
+          "gate": null
+        },
+        {
+          "name": "Testing & Validation",
+          "order": 9,
+          "sources": [
+            {
+              "doc": "SDLC Process_1",
+              "locator": "slides 15, 17",
+              "quote": "Testing focused on the system users and entire customer experience"
+            }
+          ],
+          "section_marker": null,
+          "deliverables": [],
+          "entry_criteria": [],
+          "exit_criteria": [],
+          "policies": [],
+          "gate": null
+        },
+        {
+          "name": "Launch",
+          "order": 10,
+          "sources": [
+            {
+              "doc": "SDLC Process_1",
+              "locator": "slides 15, 17",
+              "quote": "Commercial launch of product / service"
+            }
+          ],
+          "section_marker": null,
+          "deliverables": [],
+          "entry_criteria": [],
+          "exit_criteria": [],
+          "policies": [],
+          "gate": null
+        },
+        {
+          "name": "Post Launch",
+          "order": 11,
+          "sources": [
+            {
+              "doc": "SDLC Process_1",
+              "locator": "slides 15, 17",
+              "quote": "System stabilization period"
+            }
+          ],
+          "section_marker": null,
+          "deliverables": [],
+          "entry_criteria": [],
+          "exit_criteria": [],
+          "policies": [],
+          "gate": null
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,104 @@
+# Python bytecode and extensions
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Packaging/build artifacts
+build/
+dist/
+*.egg-info/
+*.egg
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Test and coverage
+htmlcov/
+.coverage
+.coverage.*
+coverage.xml
+nosetests.xml
+*.cover
+*.py,cover
+.pytest_cache/
+.hypotheses/
+.tox/
+.nox/
+
+# Type checker and linter caches
+.mypy_cache/
+.dmypy.json
+dmypy.json
+.pyre/
+.pytype/
+.ruff_cache/
+
+# Notebooks
+.ipynb_checkpoints/
+
+# Virtual environments and local env files
+.venv/
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+.env
+.env.*
+!.env.example
+.python-version
+
+# IDE/editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Thumbs.db
+ehthumbs.db
+
+# Frontend artifacts
+node_modules/
+.next/
+.nuxt/
+.svelte-kit/
+.pnpm-store/
+
+# Vector index — a build artifact, rebuilt with scripts/query/index_cmmi_chunked.py
+qdrant_storage/
+vector_db/
+
+# The demo corpus SOURCE documents ship (see data/README.md) so the ingest and
+# corpus-build scripts have something real to run on. Two exceptions:
+#   - the SDLC deck is 3.8 MB; its extracted text is already in
+#     backend/data/cmmi_docs.py and process_map.json ships prebuilt
+#   - generated_docs/ is throwaway output of a fabrication script, unused by the app
+data/CMMI_xlsx_pptx/SDLC Process_1.pptx
+data/generated_docs/
+
+# Local chat-history DB (user data, not a build artifact)
+backend/data/history.db
+backend/data/history.db-wal
+backend/data/history.db-shm
+
+# Full-prompt debug log (contains document content; local inspection only)
+backend/data/prompt_log.txt
+
+# Fabrication scripts that invent the synthetic demo content (filling blank CMMI
+# templates with the fictional project's data, authoring the deliberately broken
+# drafts). Not part of the product's document pipeline — that lives in
+# scripts/corpus/ and scripts/ingest.py, both tracked.
+scripts/populate/
+
+# Evaluation run output — transcripts and promptfoo exports are produced by a run,
+# not authored. They are tied to one corpus, one model and one prompt version, so a
+# stale one misleads more than it documents. Regenerate rather than commit.
+rag_test_logs/
+rag_eval/results.*
+rag_eval/output/

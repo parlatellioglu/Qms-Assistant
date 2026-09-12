@@ -1,0 +1,66 @@
+# ============================================================================
+#  Kurumsal Kalite Asistanı — merkezi ayar dosyası
+#
+#  Modelleri, top_k'yı ve diğer ayarlanabilir değerleri tek yerden değiştirin;
+#  ayrı ayrı kod dosyalarına girmenize gerek yok. Değişiklik yaptıktan sonra
+#  backend'i yeniden başlatın (Ctrl-C → ./run.sh).
+#
+#  Öncelik: gerçek bir ortam değişkeni (env var) her zaman bu dosyayı geçersiz
+#  kılar. Yani run.sh'nin verdiği değerler veya `LLM_MODEL=... uvicorn ...`
+#  gibi tek seferlik override'lar öncelikli kalır; bu dosya günlük ayar içindir.
+#
+#  Bir satırın başına # koyarak onu devre dışı bırakabilirsiniz; o zaman kodun
+#  içindeki varsayılan kullanılır.
+# ============================================================================
+
+models:
+  chat: gemma4:e4b            # asistanın cevap yazan modeli (Ollama)
+  compliance: gemma4:e4b      # uygunluk denetleyicisinin "yargıç" modeli
+  embedding: BAAI/bge-m3      # gömme (embedding) modeli — değiştirmek yeniden indeksleme gerektirir
+
+corpus:
+  # Hangi belge kümesi denetlensin (Uyum Denetimi + izlenebilirlik kuralları).
+  # Which document set the Compliance Checker checks and traceability resolves
+  # against. Point this at the module scripts/ingest.py wrote to use your own
+  # documents. Retrieval is switched separately, with retrieval.collection.
+  module: data.cmmi_docs
+  drafts_module: data.cmmi_drafts   # deliberately incomplete drafts; test material only
+
+retrieval:
+  top_k: 5                    # her soru için kaç kaynak belge getirilsin
+  relevance_threshold: 0.5    # bu skorun altındaki sonuçlar "bulunamadı" sayılır (RRF skoru)
+  context_turns: 2            # takip sorusunda önceki kaç soru getirmeye eklensin
+  late_chunking: true         # geç parçalama açık/kapalı
+  collection: kurumsal_kalite_cmmi_chunked   # Qdrant koleksiyon adı
+
+generation:
+  num_ctx: 8192               # modele verilen bağlam penceresi (token)
+  num_predict: 0              # üretilecek en fazla token (0 = sınırsız)
+  keep_alive: 30m             # modelin bellekte tutulma süresi (Ollama)
+  think: false                # "düşünme" modu (destekleyen modeller için)
+
+services:
+  ollama_url: http://localhost:11434   # Ollama adresi
+  qdrant_url: http://localhost:6333    # Qdrant adresi
+
+history:
+  raw_cap: 40                 # arayüzün geriye gönderdiği ham mesaj sayısı
+  user_turns: 10              # üretimde tutulan son kullanıcı sorusu sayısı
+  assistant_turns: 2          # üretimde tutulan son asistan cevabı sayısı
+  char_budget: 2400           # geçmiş için toplam karakter bütçesi
+  msg_chars: 600              # tek bir mesajdan alınacak en fazla karakter
+
+summary:
+  every_turns: 4              # kaç soruda bir yuvarlanan özet güncellensin
+  min_turns: 12               # özet çıkarmaya başlamak için asgari mesaj sayısı
+  max_chars: 500              # özetin en fazla uzunluğu
+
+compliance:
+  judge_max_chars: 16000      # yargıç modeline verilen belgeden en fazla karakter
+
+logging:
+  log_prompts: true           # modele giden tam prompt'u dosyaya yaz
+  # prompt_log_path:          # boş bırakılırsa: backend/data/prompt_log.txt
+
+uploads:
+  max_bytes: 10485760         # yüklenen dosya için en büyük boyut (10 MB)

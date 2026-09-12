@@ -1,0 +1,6 @@
+id,tarih,departman,denetim_turu,bulgu_severity,bulgu_tanimi,duzeltici_faaliyet,son_teslim,durum
+AUD-2025-001,2025-01-15,Kalite,İç Denetim,Kritik,Doküman kontrol prosedürüne uyulmuyor. Eski versiyonlar arşivlenmemiş.,Tüm dokümanların versiyon kontrolü yapılacak ve arşivlenecek.,2025-02-15,Kapandı
+AUD-2025-002,2025-02-20,Mühendislik,İç Denetim,Minor,İş sağlığı güvenlik talimatı panoda asılı değil.,Talimatın çıktısı alınarak panoya asılacak.,2025-03-01,Kapandı
+AUD-2025-003,2025-03-10,İnsan Kaynakları,İç Denetim,Major,2024 yılı eğitim kayıtlarının %20'si eksik.,Eğitim kayıtları tamamlanacak ve sisteme girilecek.,2025-04-15,Devam Ediyor
+AUD-2025-004,2025-04-05,Satın Alma,Dış Denetim,Kritik,Tedarikçi değerlendirme formları güncel değil. 3 tedarikçinin değerlendirmesi 12 aydan uzun süredir yapılmamış.,Tüm tedarikçiler için değerlendirme takvimi oluşturulacak.,2025-05-30,Açık
+AUD-2025-005,2025-05-12,Yönetim,Gözden Geçirme,Gözlem,Kalite hedefleri departman bazında yeterince tanımlanmamış.,Her departman için SMART kalite hedefleri belirlenecek.,2025-06-30,Açık

@@ -1,0 +1,35 @@
+/* ============================================================
+   QMS Assistant — Spacing & layout tokens
+   4px base grid
+   ============================================================ */
+
+:root {
+  --space-0:  0;
+  --space-1:  4px;
+  --space-2:  8px;
+  --space-3:  12px;
+  --space-4:  16px;
+  --space-5:  20px;
+  --space-6:  24px;
+  --space-8:  32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --space-20: 80px;
+
+  /* Radii — measured, professional; not pill-everywhere */
+  --radius-xs:  3px;
+  --radius-sm:  6px;
+  --radius-md:  8px;
+  --radius-lg:  12px;
+  --radius-xl:  16px;
+  --radius-pill: 999px;
+
+  /* Layout */
+  /* Layout dimensions */
+  --sidebar-w:     272px; /* @kind other */
+  --drawer-w:      400px; /* @kind other */
+  --composer-h:    auto; /* @kind other */
+  --content-max:   760px; /* @kind other */
+  --header-h:      60px; /* @kind other */
+}

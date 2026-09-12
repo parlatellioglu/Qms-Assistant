@@ -1,0 +1,264 @@
+# Compliance rules for the System Requirements Specification (SRS) template.
+# Basis = rule set (primary). See backend/rules/README.md for the schema and the
+# check.type vocabulary. Grounded in CMMI-IT-005 (the approved reference SRS);
+# a draft that drops or weakens any of these should raise the cited rule id.
+#
+# `statement`, `fix_hint` and `criterion` are DISPLAY / PROMPT text and are in
+# English. The values under `check` that are matched against the document text
+# (any_of, roles, patterns) stay exactly as they are — several are deliberately
+# bilingual, because the documents themselves are Turkish.
+
+# ---------------------------------------------------------------------------
+# Tier 1 — structure (deterministic, no LLM). The backbone: fast and exact.
+# ---------------------------------------------------------------------------
+
+- id: RULE-SRS-STRUCT-001
+  applies_to:
+    doc_kind: SRS
+  tier: structure
+  severity: blocker
+  statement: >
+    The SRS must contain a Revision History table with at least three version
+    rows.
+  check:
+    type: revision_history
+    min_versions: 3
+  source: Corporate document template / CMMI CM
+  fix_hint: >
+    Add a Revision History table covering the first draft, the internal review
+    and the approved baseline.
+
+- id: RULE-SRS-STRUCT-002
+  applies_to:
+    doc_kind: SRS
+  tier: structure
+  severity: high
+  statement: >
+    The SRS must contain a Security Requirements section.
+  check:
+    type: section_present
+    any_of: ["Security Requirements", "Güvenlik Gereksinimleri"]
+  source: "CMMI RD SP 1.1 / SRS template §3 Security"
+  fix_hint: >
+    Add a Security Requirements section covering authentication, encryption and
+    the audit log.
+
+- id: RULE-SRS-STRUCT-003
+  applies_to:
+    doc_kind: SRS
+  tier: structure
+  severity: high
+  statement: >
+    The SRS must contain a Prepared / Recommended / Approved By signature block.
+  check:
+    type: signature_block
+    roles: ["Prepared By", "Recommended By", "Approved By"]
+  source: "Corporate approval process"
+  fix_hint: >
+    Add the approval block at the front of the document, with signature and date
+    fields for all three responsible roles.
+
+- id: RULE-SRS-STRUCT-004
+  applies_to:
+    doc_kind: SRS
+  tier: structure
+  severity: medium
+  statement: >
+    The SRS must list the related upstream/downstream documents in a References
+    section.
+  check:
+    type: section_present
+    any_of: ["References", "Referanslar"]
+  source: "SRS template §7"
+  fix_hint: >
+    Add a References section listing the related documents, such as the BUR, the
+    TRF and the interface control document.
+
+- id: RULE-SRS-STRUCT-006
+  applies_to:
+    doc_kind: SRS
+  tier: structure
+  severity: high
+  statement: >
+    The SRS must contain a Scope section defining the boundaries of the system.
+  check:
+    type: section_present
+    any_of: ["Scope", "Kapsam"]
+  source: "SRS template §1.2 Scope"
+  fix_hint: >
+    Add a Scope section stating what the system does and where its boundaries
+    lie.
+
+- id: RULE-SRS-STRUCT-007
+  applies_to:
+    doc_kind: SRS
+  tier: structure
+  severity: high
+  statement: >
+    The SRS must contain a Functional Requirements section listing the defined
+    functional requirements.
+  check:
+    type: section_present
+    any_of: ["Functional Requirements", "Fonksiyonel Gereksinim"]
+  source: "CMMI RD SP 1.1 / SRS template §3"
+  fix_hint: >
+    Add a Functional Requirements section listing numbered requirements
+    (e.g. FR-01).
+
+- id: RULE-SRS-META-005
+  applies_to:
+    doc_kind: SRS
+  tier: structure
+  severity: medium
+  statement: >
+    A published SRS must carry a meaningful version number (semantic:
+    baseline >= 1.0).
+  check:
+    type: metadata_regex
+    field: version
+    pattern: '^[1-9]\d*\.\d+$'   # baseline >= 1.0 (0.x is a draft)
+  source: "Versioning standard (semantic versioning)"
+  fix_hint: "Raise the version to a released value such as 1.0 for the approved baseline (0.x is a draft)."
+
+# ---------------------------------------------------------------------------
+# Tier 2 — traceability (exact id resolution over the corpus; the "existing
+# documents" basis). No judgment: a reference either resolves or it doesn't.
+# ---------------------------------------------------------------------------
+
+- id: RULE-SRS-TRACE-010
+  applies_to:
+    doc_kind: SRS
+  tier: traceability
+  severity: high
+  statement: >
+    Every document id referenced in the SRS (CMMI-IT-###) must exist in the
+    corpus and be published.
+  check:
+    type: refs_resolve
+    id_pattern: 'CMMI-IT-\d{3}(?!\d)'   # trailing boundary: don't match inside CMMI-IT-2025-014
+    require_status: published
+  source: "Traceability / review checklist"
+  fix_hint: >
+    Correct the references that do not resolve, or add and publish the
+    referenced document in the corpus.
+
+- id: RULE-SRS-TRACE-011
+  applies_to:
+    doc_kind: SRS
+  tier: traceability
+  severity: medium
+  statement: >
+    Functional requirements in the SRS must be traceable to a requirement in the
+    Business Unit Requirements (BUR) document.
+  check:
+    type: id_trace
+    from_pattern: 'FR-\d{2}'
+    to_doc_kind: BUR
+  source: "CMMI RD — requirements traceability"
+  fix_hint: >
+    Map each functional requirement to a BUR/URS item, or add it to the
+    traceability matrix.
+
+# ---------------------------------------------------------------------------
+# Tier 3 — content (rule-guided LLM-as-judge). Runs only under a specific
+# rule statement and must cite the document span, never free-form judgment.
+# ---------------------------------------------------------------------------
+
+- id: RULE-SRS-CONTENT-020
+  applies_to:
+    doc_kind: SRS
+  tier: content
+  severity: medium
+  statement: >
+    The Scope section must state explicitly what is OUT of scope.
+  check:
+    type: llm_judge
+    criterion: >
+      Does the Scope section explicitly state the functions or areas left
+      outside the system's scope (e.g. a web portal, B2B)?
+    require_citation: true
+  source: "SRS template §1.2 Scope"
+  fix_hint: "Add a paragraph to the Scope section that explicitly lists what is out of scope."
+
+- id: RULE-SRS-CONTENT-021
+  applies_to:
+    doc_kind: SRS
+  tier: content
+  severity: high
+  statement: >
+    Performance requirements must contain verifiable numeric targets
+    (e.g. TPS, response time, concurrent users).
+  check:
+    type: llm_judge
+    criterion: >
+      Does the performance requirements section give concrete, measurable
+      numeric targets (transactions per second, response time in seconds,
+      concurrent users)?
+    require_citation: true
+  source: "CMMI RD — verifiable requirements"
+  fix_hint: >
+    Replace qualitative phrasing such as "fast enough" with measurable targets
+    (e.g. >=500 TPS, <=2 s response, 50,000 concurrent users).
+
+- id: RULE-SRS-CONTENT-022
+  applies_to:
+    doc_kind: SRS
+  tier: content
+  severity: high
+  statement: >
+    Security requirements must cover authentication/authorisation, encryption in
+    transit and at rest, and an audit log.
+  check:
+    type: llm_judge
+    criterion: >
+      Does the security section address each of these three topics: (1)
+      authentication/authorisation, (2) encryption (TLS in transit and at rest),
+      (3) audit / trace logging?
+    require_citation: true
+    must_cover: ["authentication", "encryption", "audit log"]
+  source: "CMMI RD / corporate information security policy"
+  fix_hint: >
+    Add the missing security topics: authentication/authorisation, encryption in
+    transit and at rest, and the audit log.
+
+- id: RULE-SRS-CONTENT-023
+  applies_to:
+    doc_kind: SRS
+  tier: content
+  severity: medium
+  statement: >
+    Service continuity/availability requirements must state a numeric
+    availability target (e.g. 99.9%) and the disaster-recovery targets
+    (RPO/RTO).
+  check:
+    type: llm_judge
+    criterion: >
+      Does the service management / continuity section give both a numeric
+      availability target (uptime as a percentage) and explicit RPO and RTO
+      targets for disaster recovery?
+    require_citation: true
+    must_cover: ["availability", "RPO", "RTO"]
+  source: "CMMI RD — verifiable requirements / service continuity"
+  fix_hint: >
+    State the availability target as a percentage (e.g. 99.9%) and add RPO/RTO
+    targets for disaster recovery.
+
+- id: RULE-SRS-CONTENT-024
+  applies_to:
+    doc_kind: SRS
+  tier: content
+  severity: medium
+  statement: >
+    The SRS must define how the system behaves on errors and exceptions (safe
+    rejection, rollback, informing the user).
+  check:
+    type: llm_judge
+    criterion: >
+      Does the document explicitly define how the system behaves in invalid or
+      failed states (e.g. safe rejection, transaction rollback, a consistent
+      error message to the user)?
+    require_citation: true
+  source: "SRS template — Error Messages / Exception Handling"
+  fix_hint: >
+    Add a section defining the system's behaviour for error messages and
+    exception handling (rollback, safe rejection, user notification).

@@ -1,0 +1,64 @@
+{
+  "description": "Metadata schema for Quality-RAG sample documents",
+  "fields": {
+    "id": {
+      "type": "string",
+      "pattern": "DOC-\\d{3}",
+      "description": "Unique document identifier"
+    },
+    "title": {
+      "type": "string",
+      "description": "Document title"
+    },
+    "department": {
+      "type": "string",
+      "enum": ["Yönetim", "Kalite", "İnsan Kaynakları", "Mühendislik", "Satın Alma"],
+      "description": "Owning department"
+    },
+    "document_type": {
+      "type": "string",
+      "enum": ["policy", "procedure", "instruction", "form", "report"],
+      "description": "Type of the document"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["draft", "published", "under_review", "archived"],
+      "description": "Document lifecycle status"
+    },
+    "version": {
+      "type": "string",
+      "description": "Semantic version number"
+    },
+    "author": {
+      "type": "string",
+      "description": "Document author name"
+    },
+    "created_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Creation date"
+    },
+    "last_reviewed": {
+      "type": "string",
+      "format": "date",
+      "description": "Last review date"
+    },
+    "language": {
+      "type": "string",
+      "enum": ["TR", "EN"],
+      "description": "Document language"
+    },
+    "tags": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Keyword tags for filtering and search"
+    }
+  },
+  "optional_fields": {
+    "archived_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Date when document was archived"
+    }
+  }
+}

@@ -1,0 +1,48 @@
+/* ============================================================
+   QMS Assistant — Typography tokens
+   ============================================================ */
+
+:root {
+  /* Families */
+  --font-sans: 'IBM Plex Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+
+  /* Weights */
+  --fw-regular: 400; /* @kind other */
+  --fw-medium:  500; /* @kind other */
+  --fw-semibold: 600; /* @kind other */
+  --fw-bold:    700; /* @kind other */
+
+  /* Type scale (1.20 minor third, 16px base) */
+  --fs-xs:   12px;
+  --fs-sm:   13px;
+  --fs-base: 15px;
+  --fs-md:   16px;
+  --fs-lg:   18px;
+  --fs-xl:   22px;
+  --fs-2xl:  28px;
+  --fs-3xl:  34px;
+  --fs-4xl:  44px;
+
+  /* Line heights */
+  --lh-tight:   1.2; /* @kind other */
+  --lh-snug:    1.35; /* @kind other */
+  --lh-normal:  1.5; /* @kind other */
+  --lh-relaxed: 1.65; /* @kind other */
+
+  /* Letter spacing */
+  --ls-tight:  -0.02em; /* @kind other */
+  --ls-normal: 0; /* @kind other */
+  --ls-wide:   0.04em; /* @kind other */
+  --ls-caps:   0.08em; /* @kind other */
+
+  /* Semantic roles */
+  --text-display:    var(--fw-bold) var(--fs-4xl)/var(--lh-tight) var(--font-sans);
+  --text-h1:         var(--fw-semibold) var(--fs-3xl)/var(--lh-tight) var(--font-sans);
+  --text-h2:         var(--fw-semibold) var(--fs-2xl)/var(--lh-snug) var(--font-sans);
+  --text-h3:         var(--fw-semibold) var(--fs-xl)/var(--lh-snug) var(--font-sans);
+  --text-body-lg:    var(--fw-regular) var(--fs-lg)/var(--lh-relaxed) var(--font-sans);
+  --text-body-base:  var(--fw-regular) var(--fs-base)/var(--lh-normal) var(--font-sans);
+  --text-label:      var(--fw-medium) var(--fs-sm)/var(--lh-snug) var(--font-sans);
+  --text-caption:    var(--fw-regular) var(--fs-xs)/var(--lh-snug) var(--font-sans);
+}
