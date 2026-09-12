@@ -1,6 +1,6 @@
 # QMS Assistant
 
-A **local, private, Turkish-language AI system** over an organisation's
+A **local, private, bilingual AI system** over an organisation's
 quality-management documents (CMMI / SDLC procedures, specifications, test plans).
 It answers questions from *only* those documents — always with citations and an
 honest "I don't have this" fallback — checks documents against an authored rule set,
@@ -11,10 +11,13 @@ BGE-M3 embeddings in-process. No external AI APIs, no document or question leavi
 the host. That was a hard constraint, not a preference — it aligns with KVKK,
 Turkish data-protection law.
 
-> The product is **Turkish-facing**: the UI chrome, the prompts and the corpus are
-> Turkish. **Answers follow the language of the question** — ask in English and the
-> answer, including the "I couldn't find this" notice, comes back in English. The
-> documentation is English for readability.
+> **On language.** The interface, the compliance rules and the documentation are
+> English. The bundled corpus is mostly Turkish. **Answers follow the language of the
+> question** — ask in English and you get an English answer citing Turkish sources;
+> ask in Turkish and you get Turkish. That works because the embedding model (BGE-M3)
+> is multilingual, so retrieval is cross-lingual: of the English evaluation questions
+> whose answer key names a source document, all 9 retrieve that document from the
+> Turkish corpus.
 
 > **The bundled corpus is synthetic.** It was written for this project — a fictional
 > organisation, project, people and identifiers — so the system has a realistic

@@ -2,8 +2,9 @@
 
 The functional and non-functional requirements the system was built against.
 
-Originally authored in Turkish alongside the product (which is Turkish-facing);
-translated here for readability. Status is stated against the **current code**, not
+Originally authored in Turkish alongside the product; translated here for
+readability. The wording of some requirements assumed a Turkish-only product —
+where the system has since moved past that, the status column says so. Status is stated against the **current code**, not
 against the original plan — several items that were planned at authoring time have
 since shipped, and a few turned out to be partial rather than done.
 

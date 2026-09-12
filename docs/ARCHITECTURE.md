@@ -13,7 +13,7 @@ Companion documents:
 
 ## 1. What this is
 
-A **local, private, Turkish-language AI system over an organisation's
+A **local, private, bilingual AI system over an organisation's
 quality-management documents** (CMMI / SDLC procedures, specifications, test plans).
 Not just a chatbot — three product pillars:
 
@@ -31,10 +31,12 @@ Not just a chatbot — three product pillars:
   in-house." (Aligns with KVKK, Turkish data-protection law.) One caveat: the
   frontend loads React and Babel from a public CDN, so the browser fetches those
   libraries — no project data is involved, but it isn't offline-capable as shipped.
-- **Turkish-facing, but answers follow the question.** The UI chrome, the prompts
-  and the corpus are Turkish; the answer is written in whatever language the user
-  asked in (see §4.2). The documents may be Turkish while the question is English —
-  that does not change the answer's language.
+- **Bilingual, with the answer following the question.** The interface, the rule
+  sets and the documentation are English; the corpus is mostly Turkish; the internal
+  prompt templates are written in Turkish. The answer is written in whatever language
+  the user asked in (see §4.2) — the documents may be Turkish while the question is
+  English, and that does not change the answer's language. Retrieval is cross-lingual
+  because BGE-M3 is multilingual.
 - **Deterministic and grounded.** Temperature 0, fixed seed; answers cite documents
   and never fabricate.
 - **CPU-friendly.** Runs on ordinary hardware (developed on a 16 GB Mac; a 32 GB
@@ -431,10 +433,12 @@ See [`EVALUATION.md`](EVALUATION.md) for the accuracy measurement beyond unit te
    and reduce cross-source conflation; changing them reduces consistency.
 7. **The compliance content tier costs one model call per rule.** That's why it is
    opt-in and why the deterministic tiers run first.
-8. **Turkish in the chrome, not necessarily in the answer.** UI strings, prompts
-   and the corpus are Turkish, but the answer language is chosen per question by
-   `detect_language()` in `llm.py`, and the fallback notice has one variant per
-   language. Adding a language means adding a notice, not just a prompt line.
+8. **Language is per-question, not global.** The answer language is chosen by
+   `detect_language()` in `llm.py`, and the fallback notice — which the *backend*
+   prepends, not the model — has one variant per language in `FALLBACK_NOTICES`.
+   Adding a language means adding a notice, not just a prompt line. The prompt
+   templates themselves are still Turkish; they instruct the model to match the
+   question, so their own language is incidental.
 
 ---
 
